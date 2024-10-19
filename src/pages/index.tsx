@@ -77,9 +77,9 @@ const SuwitJawa = () => {
           {/* Info hasil */}
           <div className="my-10 max-w-xs mx-auto">
             <BackgroundGradient className=" px-5 m-2 rounded-lg flex justify-center ">
-              <div className="w-40 h-16 border-4 border-pink-300 bg-white text-pink-500 text-2xl font-semibold rounded-full flex items-center justify-center">
+              <BackgroundGradient className="w-40 h-16  bg-white text-pink-500 text-2xl font-semibold rounded-full flex items-center justify-center">
                 {result}
-              </div>
+              </BackgroundGradient>
             </BackgroundGradient>
           </div>
 

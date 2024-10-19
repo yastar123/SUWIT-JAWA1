@@ -4,7 +4,6 @@ import React from "react";
 import { Vortex } from "@/ui/vortex";
 import { BackgroundGradient } from "@/ui/background-gradient";
 import { TextGenerateEffect } from "@/ui/text-generate-effect";
-import { AnimatedTooltip } from "@/ui/animated-tooltip";
 
 const words = `SUWIT JAWA`;
 

@@ -32,14 +32,17 @@ export const AnimatedTooltip = ({
         useTransform(x, [-100, 100], [-50, 50]),
         springConfig
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleMouseMove = (event: any) => {
         const halfWidth = event.target.offsetWidth / 2;
         x.set(event.nativeEvent.offsetX - halfWidth); // set the x value, which is then used in transform and rotate
     };
 
     return (
+        // eslint-disable-next-line react/jsx-no-comment-textnodes
         <>
-            {items.map((item, idx) => (
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars
+            {items.map((item) => (
                 <div
                     className="-mr-4  relative group"
                     key={item.name}

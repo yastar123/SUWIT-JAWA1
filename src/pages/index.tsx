@@ -1,115 +1,133 @@
+import { useState } from "react";
 import Image from "next/image";
-import localFont from "next/font/local";
+import React from "react";
+import { Vortex } from "@/ui/vortex";
+import { BackgroundGradient } from "@/ui/background-gradient";
+import { TextGenerateEffect } from "@/ui/text-generate-effect";
+import { AnimatedTooltip } from "@/ui/animated-tooltip";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const words = `SUWIT JAWA`;
 
-export default function Home() {
+const SuwitJawa = () => {
+  const [computerImage, setComputerImage] = useState<string>("/img/gajah.png");
+  const [result, setResult] = useState<string>("");
+
+  // Fungsi untuk mendapatkan pilihan komputer
+  const getPilihanComputer = (): string => {
+    const random = parseFloat(Math.random().toFixed(1)); // Convert to number
+    if (random < 0.34) return "gajah";
+    if (random >= 0.34 && random < 0.64) return "semut";
+    return "orang";
+  };
+
+  // Fungsi untuk mendapatkan hasil dari pilihan player dan komputer
+  const getHasil = (player: string, computer: string): string => {
+    if (player === computer) return "seri";
+    if (player === "gajah") return computer === "orang" ? "menang" : "kalah";
+    if (player === "semut") return computer === "gajah" ? "menang" : "kalah";
+    if (player === "orang") return computer === "semut" ? "menang" : "kalah";
+    return "kalah";
+  };
+
+  // Fungsi untuk memutar gambar komputer
+  const putarGambar = () => {
+    const gambar = ["gajah", "orang", "semut"];
+    let i = 0;
+    const waktuMulai = new Date().getTime();
+    const interval = setInterval(() => {
+      if (new Date().getTime() - waktuMulai > 1000) {
+        clearInterval(interval);
+        return;
+      }
+      setComputerImage(`/img/${gambar[i++]}.png`);
+      if (i === gambar.length) i = 0;
+    }, 100);
+  };
+
+  // Fungsi ketika player memilih gambar
+  const handleClick = (playerChoice: string) => {
+    const pilihanComputer = getPilihanComputer();
+    const hasil = getHasil(playerChoice, pilihanComputer);
+    putarGambar();
+
+    setTimeout(() => {
+      setComputerImage(`/img/${pilihanComputer}.png`);
+      setResult(hasil);
+    }, 1000);
+  };
+
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <Vortex className="min-h-screen flex flex-col items-center justify-center ">
+      <h1 className="text-5xl font-bold text-center text-white mb-10">
+        <TextGenerateEffect words={words} />
+      </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      <div className=" mx-auto p-4">
+        <div className="w-full max-w-md md:max-w-md mx-auto">
+          {/* Area komputer */}
+          <BackgroundGradient className=" md:p-5 md:m-2 rounded-lg md:mb-4 p-1 flex justify-center items-center  ">
             <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              width={60}
+              height={60}
+              src={computerImage}
+              alt="Computer Choice"
+              className="md:w-24 md:h-24  rounded-full"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </BackgroundGradient>
+
+          {/* Info hasil */}
+          <div className="my-10 max-w-xs mx-auto">
+            <BackgroundGradient className=" px-5 m-2 rounded-lg flex justify-center ">
+              <div className="w-40 h-16 border-4 border-pink-300 bg-white text-pink-500 text-2xl font-semibold rounded-full flex items-center justify-center">
+                {result}
+              </div>
+            </BackgroundGradient>
+          </div>
+
+          {/* Area player */}
+          <BackgroundGradient className="py-4 rounded-lg flex justify-between">
+            <button
+              onClick={() => handleClick("gajah")}
+              className="focus:outline-none"
+            >
+              <Image
+                src="/img/gajah.png"
+                alt="Gajah"
+                className="md:w-24 md:h-24 rounded-full transition-transform duration-200 hover:scale-110"
+                width={60}
+                height={60}
+
+              />
+            </button>
+            <button
+              onClick={() => handleClick("orang")}
+              className="focus:outline-none"
+            >
+              <Image
+                src="/img/orang.png"
+                alt="Orang"
+                className="md:w-24 md:h-24 rounded-full transition-transform duration-200 hover:scale-110"
+                width={60}
+                height={60}
+              />
+            </button>
+            <button
+              onClick={() => handleClick("semut")}
+              className="focus:outline-none"
+            >
+              <Image
+                src="/img/semut.png"
+                alt="Semut"
+                className="md:w-24 md:h-24 rounded-full transition-transform duration-200 hover:scale-110"
+                width={60}
+                height={60}
+              />
+            </button>
+          </BackgroundGradient>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </Vortex>
   );
-}
+};
+
+export default SuwitJawa;
